@@ -36,7 +36,7 @@ public class Filhantering {
 
                         
                         
-                        if (split[0].equals(input) || split[1].trim().equals(input)) {
+                        if (split[0].toLowerCase().equals(input.toLowerCase()) || split[1].toLowerCase().trim().equals(input.toLowerCase())) {
                             String check = checkIfActiveMember(tempLine, date);
                             return check;
                         }
@@ -54,14 +54,14 @@ public class Filhantering {
         
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                         
-        Date secondDate = new Date();
+        Date currentDate = new Date();
         Date firstDate = sdf.parse(date);
-
-        long diffInMillies = Math.abs(secondDate.getTime() - firstDate.getTime());
+        
+        long diffInMillies = Math.abs(currentDate.getTime() - firstDate.getTime());
         long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
                         
         if (diff <= 365 && diff >= 0) {
-            output(tempLine, date);
+            output(tempLine, sdf.format(currentDate));
             return tempLine + "\n" + date + "\nAktiv";
         }
         else {
@@ -69,11 +69,13 @@ public class Filhantering {
         }
     }
     
-    public void output(String name, String date) {
+    public void output(String name, String currentDate) {
         try (BufferedWriter out = new BufferedWriter(new FileWriter("customers_visitors.txt", true))) {
+            
+            
             out.write(name);
             out.newLine();
-            out.write(date);
+            out.write(currentDate);
             out.newLine();
         }
         catch (Exception e) {
